@@ -24,10 +24,10 @@ import FamilyVerification from './Pages/FamilyVerification';
 
 
 
-function RegisterAndLogout() {
-  localStorage.clear()
-  return <Register/>
-}
+// function RegisterAndLogout() {
+//   localStorage.clear()
+//   return <Register/>
+// }
 
 const App: React.FC = () => {
   return (
@@ -42,7 +42,7 @@ const App: React.FC = () => {
           </ProtectedRoute>
         }/>
         <Route path="login" element={<Login />} />
-        <Route path="register" element={<RegisterAndLogout />} />
+        <Route path="register" element={<Register />} />
         <Route path="settings" element={
         <ProtectedRoute>
           <Layout_settings>
