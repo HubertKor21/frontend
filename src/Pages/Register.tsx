@@ -1,4 +1,4 @@
-import Form from "../Component/Form"
+import Form from "../Component/Form";
 
 export function Register() {
 
@@ -6,3 +6,5 @@ export function Register() {
     <Form route='dj-rest-auth/registration/' method="register"/>
     );
   }
+
+export default Register;
