@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import api from "../../api";
+
+interface Category {
+  assigned_amount: number;
+}
+
+interface Group {
+  groups_title: string;
+  categories: Category[];
+}
 
 function ChartPie() {
   const [chartData, setChartData] = useState({
     series: [],
     options: {
       labels: [],
-      chart: { type: "polarArea" },
+      chart: { type: "polarArea" as "polarArea" },
       stroke: { colors: ["#fff"] },
       fill: { opacity: 0.8 },
     },
@@ -19,13 +28,13 @@ function ChartPie() {
         const response = await api.get("/api/groups/");
         const data = response.data;
 
-        const series = data.map((group) =>
+        const series = data.map((group: Group) =>
           group.categories.reduce(
             (sum, category) => sum + category.assigned_amount,
             0
           )
         );
-        const labels = data.map((group) => group.groups_title);
+        const labels = data.map((group: Group) => group.groups_title);
 
         setChartData({ series, options: { ...chartData.options, labels } });
       } catch (error) {

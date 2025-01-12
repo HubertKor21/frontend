@@ -4,7 +4,7 @@ import api from "../api";
 
 const EmailVerification = () => {
     const [status, setStatus] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, ] = useState(null);
     const { key } = useParams(); // Pobieramy klucz weryfikacyjny z URL
 
     const handlingSubmit = async (e: React.FormEvent) => {

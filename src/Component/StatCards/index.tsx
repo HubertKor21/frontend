@@ -1,26 +1,34 @@
 import { useEffect, useState } from "react";
 import api from "../../api";
-import { CaretDown, CaretUp } from "react-ionicons";
 import userIcon from "../../assets/images/userIcon.png";
 import salesIcon from "../../assets/images/salesIcon.png";
 import ordersIcon from "../../assets/images/ordersIcon.png";
 import revenueIcon from "../../assets/images/revenueIcon.png";
-import { toast, ToastContainer } from "react-toastify";  // Import toastify
-import "react-toastify/dist/ReactToastify.css";  // Import stylów
+import { ToastContainer } from "react-toastify"; // Import toastify
+import "react-toastify/dist/ReactToastify.css"; // Import stylów
 
+// Interfejsy dla danych API
 interface Account {
   id: number;
   bank_name: string;
   balance: number;
 }
 
+interface GroupBalance {
+  total_expenses?: number;
+}
+
+interface Group {
+  category_count?: number;
+}
+
 const StatCards = () => {
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [totalIncome, setTotalIncome] = useState<number>(0);
+  const [, setAccounts] = useState<Account[]>([]);
+  const [, setTotalIncome] = useState<number>(0);
   const [totalExpenses, setTotalExpenses] = useState<number>(0);
   const [users, setUsers] = useState<number>(0);
   const [monthlyBalance, setMonthlyBalance] = useState<number>(0);
-  const [categoryCount, setCategoryCount] = useState<number>(0);  // Nowy stan na licznik kategorii
+  const [categoryCount, setCategoryCount] = useState<number>(0); // Stan na licznik kategorii
 
   // Fetch financial summary and bank accounts from backend
   useEffect(() => {
@@ -37,7 +45,6 @@ const StatCards = () => {
         setMonthlyBalance(monthlyResponse.data.total_balance);
       } catch (error) {
         console.error("Error fetching data:", error);
-
       }
     };
     fetchSummary();
@@ -61,9 +68,9 @@ const StatCards = () => {
     const fetchTotalExpenses = async () => {
       try {
         const response = await api.get("/api/group-balance/");
-        // setTotalExpenses(response.data[0].total_expenses);
         const totalCategoryExpenses = response.data.reduce(
-          (sum, group) => sum + (group.total_expenses || 0),0
+          (sum: number, group: GroupBalance) => sum + (group.total_expenses || 0),
+          0
         );
         setTotalExpenses(totalCategoryExpenses);
       } catch (error) {
@@ -73,13 +80,13 @@ const StatCards = () => {
     fetchTotalExpenses();
   }, []);
 
+  // Fetch category count from the groups API
   useEffect(() => {
     const fetchCategoryCount = async () => {
       try {
         const response = await api.get("/api/groups/");
-        // Sumujemy liczby kategorii ze wszystkich grup
         const totalCategoryCount = response.data.reduce(
-          (sum, group) => sum + (group.category_count || 0),
+          (sum: number, group: Group) => sum + (group.category_count || 0),
           0
         );
         setCategoryCount(totalCategoryCount);
@@ -87,7 +94,7 @@ const StatCards = () => {
         console.log("Error fetching category count:", error);
       }
     };
-  
+
     fetchCategoryCount();
   }, []);
 
@@ -133,18 +140,7 @@ const StatCards = () => {
           <span className="text-[28px] font-bold text-[#202224]">{card.value}</span>
           <div className="flex items-center gap-2">
             <div className="flex items-center">
-              {card.profit ? <CaretUp color="#00B69B" /> : <CaretDown color="#F93C65" />}
-              <span
-                className={`${
-                  card.profit ? "text-[#00B69B]" : "text-[#F93C65]"
-                } font-semibold text-[15px]`}
-              >
-                {card.percentage}
-              </span>
             </div>
-            <span className="text-[#606060] text-[14px]">
-              {card.profit ? "Up from month" : "Down from month"}
-            </span>
           </div>
           <img
             src={card.icon}

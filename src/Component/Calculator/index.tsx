@@ -29,10 +29,23 @@ function Calculator() {
   useEffect(() => {
     const fetchCalculators = async () => {
       try {
-        const response = await api.get("/api/savings-calculators/");
-        setCalculators(response.data);
+        // Dopasowanie odpowiedzi z API
+        const response = await api.get<Partial<CalculatorData>[]>("/api/savings-calculators/");
+        
+        // Dodajemy brakujące dane, jeżeli są dostępne
+        const fullCalculators: CalculatorData[] = response.data.map(calc => ({
+          id: calc.id || 0, // Jeżeli brak id, ustawiamy na 0
+          expense_category: calc.expense_category || "",
+          monthly_spending: calc.monthly_spending || 0,
+          user_savings_percent: calc.user_savings_percent || 0,
+          suggested_savings: calc.suggested_savings || 0,
+          potential_savings: calc.potential_savings || 0,
+        }));
+
+        setCalculators(fullCalculators);
+
         const uniqueCategories = [
-          ...new Set(response.data.map((calc: CalculatorData) => calc.expense_category)),
+          ...new Set(fullCalculators.map((calc) => calc.expense_category)),
         ];
         setCategories(uniqueCategories);
       } catch (error) {

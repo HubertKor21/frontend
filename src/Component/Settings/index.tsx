@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import api from '../../api';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { jsPDF } from "jspdf"; // Import jsPDF from 'jspdf'
+import "jspdf-autotable"; // Import the autotable plugin
+
 
 interface FamilyMember {
     email: string;
@@ -35,7 +36,7 @@ interface Group {
 function SettingTable() {
     const [familyName, setFamilyName] = useState('');
     const [email, setEmail] = useState('');
-    const [familyData, setFamilyData] = useState<FamilyData | null>(null);
+    const [, setFamilyData] = useState<FamilyData | null>(null);
     const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
     const [groups, setGroups] = useState<Group[]>([]);
     const [familysName, setFamilysName] = useState("");
@@ -86,13 +87,14 @@ function SettingTable() {
     
         // Add group information
         let yPosition = 40; // Start position for the first group
-        groups.forEach((group, groupIndex) => {
+        groups.forEach((group, ) => {
             // Add group title
             doc.setFontSize(14);
             doc.text(`Group: ${group.groups_title}`, 14, yPosition);
             yPosition += 10; // Move down after the group title
     
             // Add group categories in a table
+            
             doc.autoTable({
                 head: [['Category Title', 'Note', 'Assigned Amount']],
                 body: group.categories.map(category => [

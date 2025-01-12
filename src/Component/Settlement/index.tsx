@@ -16,11 +16,11 @@ interface FamilyMember {
   id: number;
 }
 
-interface Family {
-  member_count: number;
-  members: FamilyMember[];
-  id: number; // Zakładam, że rodzina ma ID
-}
+// interface Family {
+//   member_count: number;
+//   members: FamilyMember[];
+//   id: number; // Zakładam, że rodzina ma ID
+// }
 
 interface Settlement {
   id: number;

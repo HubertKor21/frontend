@@ -31,7 +31,7 @@ const SavingGoals: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Widoczność modalu
   const [selectedGoal, setSelectedGoal] = useState<SavingGoal | null>(null); // Wybrany cel
   const [modalAmount, setModalAmount] = useState<number>(0); // Kwota do dodania w modalu
-  const [modalGoalType, setModalGoalType] = useState<string>(""); // Kategoria w modalu
+  const [, setModalGoalType] = useState<string>(""); // Kategoria w modalu
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false); // Widoczność modalu potwierdzenia usunięcia
 
   // Pobieranie celów z API

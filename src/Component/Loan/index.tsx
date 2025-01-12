@@ -5,6 +5,8 @@ import jsPDF from "jspdf";
 import "jspdf-autotable"; // Dla obsługi tabel
 import { toast, ToastContainer } from "react-toastify";
 
+
+
 interface LoanFormData {
   id: number;
   name: string;

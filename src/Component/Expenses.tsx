@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 import api from '../api'; // Ensure the path is correct
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -33,7 +33,7 @@ interface Bank {
   bank_name: string;
 }
 
-const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group, category }) => {
+const ExpensesSection: React.FC<{ group: Group , category?: Category}> = ({ group }) => {
   const [banks, setBanks] = useState<Bank[]>([]); // List of available banks
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteCategoryModalOpen, setIsDeleteCategoryModalOpen] = useState(false);
@@ -84,7 +84,7 @@ const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group
         const categoryWithId = { ...response.data, id: response.data.id };
         setUpdatedCategories(prevCategories => [...prevCategories, categoryWithId]); // Update categories after adding
         setModalData({ category_name: '', amount: '', note: '', bankId: 0 }); // Reset modal data
-        document.getElementById(`expense_modal_${group.id}`)?.close();
+        (document.getElementById(`expense_modal_${group.id}`) as HTMLDialogElement)?.close();
         toast.success("Category added successfully")
       } catch (error) {
         toast.error("Faild to add category");
@@ -106,21 +106,15 @@ const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group
   };
 
   // Function for handling the "Edit" button click
-  const handleEditCategory = (category: Category) => {
-    setEditCategory(category); // Set the category to be edited
-    setModalData({
-      category_name: category.category_title,
-      amount: category.assigned_amount.toString(),
-      note: category.category_note,
-      bankId: category.bank,
-    });
-    document.getElementById(`edit_expense_modal_${group.id}`)?.showModal();
-  };
-
-  // Function for submitting the edited category
   const handleEditFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    // Ensure editCategory is not null before using its properties
+    if (!editCategory) {
+      toast.error("Category not found for editing.");
+      return;
+    }
+  
     const amount = parseFloat(modalData.amount.trim()) || 0;
     if (amount > 0 && modalData.bankId > 0 && modalData.category_name.trim() !== '') {
       const updatedCategory = {
@@ -130,7 +124,7 @@ const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group
         assigned_amount: amount,
         bank: modalData.bankId,
       };
-
+  
       try {
         const response = await api.put(`/api/groups/${group.id}/categories/${editCategory.id}/`, updatedCategory);
         setUpdatedCategories((prevCategories) =>
@@ -139,15 +133,17 @@ const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group
           )
         );
         setModalData({ category_name: '', amount: '', note: '', bankId: 0 });
-        document.getElementById(`edit_expense_modal_${group.id}`)?.close();
-        toast.success("Category updated successfully!")
+        (document.getElementById(`edit_expense_modal_${group.id}`) as HTMLDialogElement)?.close();
+        toast.success("Category updated successfully!");
       } catch (error) {
-        toast.error('Error updating category:');
+        toast.error('Error updating category');
       }
     } else {
       toast.error('Amount must be greater than 0 and a bank must be selected.');
     }
   };
+  
+
   const deleteCategory = async (categoryId: number) => {
     try {
       await api.delete(`/api/groups/${group.id}/categories/${categoryId}/`);
@@ -182,6 +178,17 @@ const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group
         alert("Failed to delete group. Please try again.");
       }
     }
+  };
+
+  const handleEditCategory = (category: Category) => {
+    setEditCategory(category); // Set the category to be edited
+    setModalData({
+      category_name: category.category_title,
+      amount: category.assigned_amount.toString(),
+      note: category.category_note,
+      bankId: category.bank,
+    });
+    (document.getElementById(`edit_expense_modal_${group.id}`) as HTMLDialogElement )?.showModal();
   };
 
   // Columns for DataTable
@@ -241,7 +248,7 @@ const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group
       {/* Modal for adding a category */}
       <button
         onClick={() => {
-          document.getElementById(`expense_modal_${group.id}`).showModal();
+          (document.getElementById(`expense_modal_${group.id}`) as HTMLDialogElement ).showModal();
         }}
         className="mt-4 text-blue-400"
       >
@@ -289,7 +296,7 @@ const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group
           <button onClick={addCategory} className="btn btn-primary mt-4">Add Category</button>
           <form method="dialog" className="modal-backdrop">
             <button type="button" onClick={() => {
-              document.getElementById(`expense_modal_${group.id}`).close();
+              (document.getElementById(`expense_modal_${group.id}`) as HTMLDialogElement).close();
             }} className="mt-2 text-white">Close</button>
           </form>
         </div>
@@ -338,7 +345,7 @@ const ExpensesSection: React.FC<{ group: Group , category: Category}> = ({ group
             <button onClick={handleEditFormSubmit} className="btn btn-primary mt-4">Save Changes</button>
             <form method="dialog" className="modal-backdrop">
               <button type="button" onClick={() => {
-                document.getElementById(`edit_expense_modal_${group.id}`).close();
+                (document.getElementById(`edit_expense_modal_${group.id}`) as HTMLDialogElement).close();
               }} className="mt-2 text-white">Close</button>
             </form>
           </div>

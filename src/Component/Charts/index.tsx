@@ -1,4 +1,3 @@
-import React from 'react'
 import SalesChart from '../SalesChart'
 
 function Charts() {

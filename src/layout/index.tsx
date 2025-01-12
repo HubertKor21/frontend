@@ -13,7 +13,7 @@ interface Props {
 const Layout = ({ children }: Props) => {
   const [showForm, setShowForm] = useState(false);
   const [showFamilyModal, setShowFamilyModal] = useState(false);
-  const [userHasFamily, setUserHasFamily] = useState<boolean | null>(null); // To track if the user has a family
+  const [, setUserHasFamily] = useState<boolean | null>(null); // To track if the user has a family
 
   useEffect(() =>{
     const fetchMembers = async () =>{

@@ -1,5 +1,4 @@
 import './App.css';
-import ChangePassword from './Pages/ChangePassword';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
 import { BrowserRouter , Routes, Route } from 'react-router-dom';
@@ -9,7 +8,6 @@ import ProtectedRoute from './Component/ProtectedRoute';
 import Layout from './layout';
 import StatCards from './Component/StatCards';
 import OrdersTable from './Component/OrdersTable';
-import SalesChart from './Component/SalesChart';
 import Layout_settings from './layout-setting';
 import Settings from './Component/Settings';
 import Layout_loan from './layout-loan/Layout_loan';

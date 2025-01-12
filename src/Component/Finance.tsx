@@ -26,7 +26,7 @@ const FinanceSummary: React.FC<FinanceSummaryProps> = ({ setShowForm }) => {
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        const [budgetResponse, bankResponse] = await Promise.all([  // Fetch data in parallel
+        const [, bankResponse] = await Promise.all([  // Fetch data in parallel
           api.get('/api/budget/'),
           api.get('/api/banks/'),
         ]);

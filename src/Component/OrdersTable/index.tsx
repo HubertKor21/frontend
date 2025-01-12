@@ -16,7 +16,7 @@ interface Group {
 }
 
 const OrdersTable = () => {
-    const [totalBalance, setTotalBalance] = useState<number>(0);
+    const [, setTotalBalance] = useState<number>(0);
     const [currentMonth, setCurrentMonth] = useState<number>(0);
     const [currentYear, setCurrentYear] = useState<number>(0);
     const [isModalOpen, setIsModalOpen] = useState(false);

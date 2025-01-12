@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { ACCESS_TOKEN, } from "../constants";
 import background from "../assets/images/blue-blank.jpg";
 import { toast, ToastContainer} from "react-toastify";
 
-function Form({ route, method }) {
+interface FormProps {
+    route: string;
+    method: "login" | "register";
+  }
+
+function Form({ route, method }: FormProps) {
     const [email, setEmail] = useState("");
     const [password1, setPassword1] = useState(""); // For registration
     const [password2, setPassword2] = useState(""); // For registration
@@ -16,7 +21,7 @@ function Form({ route, method }) {
     const title = method === "login" ? "Login now!" : "Register now!";
     const buttonText = method === "login" ? "Login" : "Register";
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 

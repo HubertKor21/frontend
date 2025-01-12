@@ -4,7 +4,6 @@ import api from "../api";
 
 const FamilyVerification = () => {
     const [status, setStatus] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const { token } = useParams(); // Pobieramy token z URL
 
     const handlingSubmit = async (e: React.FormEvent) => {

@@ -1,10 +1,28 @@
 import { useState } from 'react';
 
-function LoanModal({ isOpen, onClose, onSubmit }) {
-  const [formData, setFormData] = useState({
+interface LoanModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (formData: LoanFormData) => Promise<void>;
+}
+
+interface LoanFormData {
+  id: number;
+  name: string;
+  amount_reaming: number;
+  loan_type: "fixed" | "decreasing"; // Typ ustawiony na jeden z dozwolonych typów
+  interest_rate: number;
+  payment_day: number;
+  last_payment_date: string;
+  installments_remaining: number;
+}
+
+function LoanModal({ isOpen, onClose, onSubmit }: LoanModalProps) {
+  const [formData, setFormData] = useState<LoanFormData>({
+    id: 0,
     name: '',
     amount_reaming: 0, // Backend model field name
-    loan_type: 'fixed',
+    loan_type: 'fixed', // Domyślnie ustawiamy na "fixed"
     interest_rate: 0,
     payment_day: 1,
     last_payment_date: '',
@@ -13,15 +31,22 @@ function LoanModal({ isOpen, onClose, onSubmit }) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'amount_reaming' || name === 'interest_rate' || name === 'payment_day' || name === 'installments_remaining'
-        ? parseFloat(value) 
-        : value,
+      [name]:
+        name === 'amount_reaming' ||
+        name === 'interest_rate' ||
+        name === 'payment_day' ||
+        name === 'installments_remaining'
+          ? parseFloat(value)
+          : name === 'loan_type' // Zapewniamy, że 'loan_type' jest jednym z dozwolonych typów
+          ? (value as "fixed" | "decreasing")
+          : value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData); // Submit form data as it is
     onClose(); // Close modal after submitting
@@ -33,8 +58,8 @@ function LoanModal({ isOpen, onClose, onSubmit }) {
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg md:w-[30%] p-6">
         <h2 className="text-xl font-bold mb-4 w-full">Add Loan</h2>
-        <form onSubmit={handleSubmit}
-        className=''>
+        <form onSubmit={handleSubmit}>
+          {/* Form fields */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Name</label>
             <input
@@ -72,6 +97,7 @@ function LoanModal({ isOpen, onClose, onSubmit }) {
             </select>
           </div>
 
+          {/* Remaining form fields */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Interest (%)</label>
             <input

@@ -14,7 +14,7 @@ const ChartComponent = () => {
         const response = await api.get("/api/group-balance-chart/");
         const { dates, expenses } = response.data;
 
-        const expensesByDate = dates.reduce((acc, date, index) => {
+        const expensesByDate = dates.reduce((acc: { [key: string]: number }, date: string, index: number) => {
           acc[date] = (acc[date] || 0) + expenses[index];
           return acc;
         }, {});
@@ -38,7 +38,7 @@ const ChartComponent = () => {
         const response = await api.get("/api/income-by-date/");
         const { dates, income } = response.data;
 
-        const incomeByDate = dates.reduce((acc, date, index) => {
+        const incomeByDate = dates.reduce((acc: { [key: string]: number }, date: string, index: number) => {
           acc[date] = (acc[date] || 0) + income[index];
           return acc;
         }, {});
@@ -64,10 +64,10 @@ const ChartComponent = () => {
 
   const options = {
     chart: {
-      type: "area",
+      type: "area" as "area",
     },
     xaxis: {
-      type: "datetime",
+      type: "datetime" as "datetime",
       categories: mergedData.map((date) => new Date(date).getTime()),
     },
   };

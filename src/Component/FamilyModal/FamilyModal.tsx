@@ -7,11 +7,11 @@ interface FamilyModalProps {
   const FamilyModal = ({ isVisible, onClose, onCreateFamily }: FamilyModalProps) => {
     if (!isVisible) return null; // Don't render the modal if it's not visible
   
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const familyName = (e.target as any).familyName.value;
-      console.log("Creating family with name:", familyName); // Debugging log
-      onCreateFamily(familyName); // Pass the family name to the parent component
+      const familyName = (e.target as HTMLFormElement).familyName.value;
+      console.log("Creating family with name:", familyName);
+      onCreateFamily(familyName);
     };
   
     return (
@@ -33,7 +33,7 @@ interface FamilyModalProps {
               <button
                 type="submit"
                 className="bg-blue-500 text-white py-2 px-4 rounded"
-                onClick={(e) => console.log("Create clicked")} // Debugging log
+                onClick={() => console.log("Create clicked")} // Debugging log
               >
                 Create
               </button>

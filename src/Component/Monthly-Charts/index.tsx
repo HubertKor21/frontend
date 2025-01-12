@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import api from "../../api"; // Przykład z API, dostosuj do swojego importu
+
+interface MonthlyBalanceItem {
+  month: number;
+  total_balance: number;
+  total_expenses: number;
+}
 
 const Monthly_Balance = () => {
   const [chartData, setChartData] = useState({
@@ -16,7 +22,7 @@ const Monthly_Balance = () => {
     ],
     options: {
       chart: {
-        type: "bar",
+        type: "bar" as "bar",
         height: 350
       },
       plotOptions: {
@@ -24,7 +30,7 @@ const Monthly_Balance = () => {
           horizontal: false,
           columnWidth: "55%",
           borderRadius: 5,
-          borderRadiusApplication: "end"
+          borderRadiusApplication: "end" as "end"
         }
       },
       dataLabels: {
@@ -48,7 +54,7 @@ const Monthly_Balance = () => {
       },
       tooltip: {
         y: {
-          formatter: function (val) {
+          formatter: function (val: number) {
             return "$ " + val;
           }
         }
@@ -63,13 +69,13 @@ const Monthly_Balance = () => {
         const data = response.data;
 
         // Przygotowanie danych wykresu
-        const months = data.monthly_balances.map((item) => {
+        const months = data.monthly_balances.map((item: MonthlyBalanceItem) => {
           const monthName = new Date(0, item.month - 1).toLocaleString("default", { month: "short" });
           return monthName;
         });
 
-        const balances = data.monthly_balances.map((item) => item.total_balance);
-        const expenses = data.monthly_balances.map((item) => item.total_expenses);
+        const balances = data.monthly_balances.map((item: MonthlyBalanceItem) => item.total_balance);
+        const expenses = data.monthly_balances.map((item: MonthlyBalanceItem) => item.total_expenses);
 
         setChartData({
           series: [
